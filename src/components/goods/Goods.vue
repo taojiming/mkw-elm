@@ -33,6 +33,9 @@
                                             <span class="newPrice">￥{{food.price}}</span>
                                             <span v-show="food.oldPrice" 
                                             class="oldPrice">￥{{food.oldPrice}}</span>
+                                            <div class="cartcontrol-wrapper">
+                                                <cart-control :food="food"></cart-control>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
@@ -41,29 +44,35 @@
                     </ul>
             </div> 
         </scroll>
-        <Shopcart></Shopcart>
+        <Shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></Shopcart>
     </div>
 </template>
 
 <script>
 import { getGoods } from '../../network/index'
 import Scroll from 'components/betterScroll/Scroll'
-import Shopcart from 'components/shopcart/Shopcart'
+import Shopcart from 'components/shopcart/Shopcart' //购物车
+import CartControl from 'components/cartcontrol/CartControl' //购物车添加减少按钮
 const ERR_OK = 0
 export default {
     data() {
         return {
-            goods: []
+            goods: [],
+        }
+    },
+    props: {
+        seller: {
+            type: Object
         }
     },
     components: {
         Scroll,
-        Shopcart
+        Shopcart,
+        CartControl
     },
     created() {
         // 从服务器请求数据
         this._getGoods();
-
         this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     },
     methods: {
@@ -74,7 +83,7 @@ export default {
                     this.goods = res.data;
                 }
             })
-        }
+        },
     }
 }
 </script>
