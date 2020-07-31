@@ -44,7 +44,8 @@
                     </ul>
             </div> 
         </scroll>
-        <Shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></Shopcart>
+        <Shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selectfoods="selectfoods"></Shopcart>
+        
     </div>
 </template>
 
@@ -75,20 +76,34 @@ export default {
         this._getGoods();
         this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
     },
+    computed: {
+        selectfoods() {
+            console.log(this)
+            let foods = [];
+            this.goods.forEach( good => {
+                    good.foods.forEach( food => {
+                        if(food.count){
+                            foods.push(food)
+                        }
+                })
+            })
+            return foods
+        }
+    },
     methods: {
         _getGoods() {
             return getGoods().then(res => {
-                console.log(res.data);
+                console.log(res.data)
                 if(res.errno === ERR_OK){
-                    this.goods = res.data;
+                    this.goods = res.data
                 }
             })
-        },
+        }
     }
 }
 </script>
 
-<style lang="stylus"scoped>
+<style lang="stylus" scoped>
     @import "../../common/stylus/mixin.styl"
     .goods
         display flex
@@ -97,7 +112,7 @@ export default {
         bottom 46px
         width 100%
         background-color #f3f5f7
-        overflow hidden 
+        overflow hidden
         .menu-wrapper
             flex 0 0 80px
             .menu-item
@@ -171,6 +186,7 @@ export default {
                         .rating
                             margin-left 12px
                     .price
+                        position relative
                         margin-top 8px
                         .newPrice
                             font-size 10px
@@ -184,4 +200,8 @@ export default {
                             color rgb(147,153,159)
                             font-weight 700
                             line-height 24px
+                        .cartcontrol-wrapper
+                            position absolute
+                            right 36px
+                            bottom 0
 </style>
